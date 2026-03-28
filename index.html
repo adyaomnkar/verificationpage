@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sketch Login</title>
+    <!-- Use a nice handwritten font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Walter+Turncoat&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX for complex math -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --sketch-color: #2c2c2c;
+            /* Hand-drawn borders */
+            --sketch-border-1: 3px solid var(--sketch-color);
+            --sketch-border-2: 2px dashed var(--sketch-color);
+            --sketch-radius-1: 255px 15px 225px 15px / 15px 225px 15px 255px;
+            --sketch-radius-2: 15px 255px 15px 225px / 255px 15px 225px 15px;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fafafa;
+            /* Gridded graph paper background pattern */
+            background-image: 
+                linear-gradient(to right, #e0e0e0 1px, transparent 1px),
+                linear-gradient(to bottom, #e0e0e0 1px, transparent 1px);
+            background-size: 20px 20px;
+            font-family: 'Walter Turncoat', cursive;
+            color: var(--sketch-color);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            padding: 2.5rem;
+            background: #fff;
+            border: var(--sketch-border-1);
+            border-radius: var(--sketch-radius-1);
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 10;
+        }
+
+        h1, h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-decoration-style: wavy;
+        }
+
+        p.subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            padding-left: 0.5rem;
+        }
+
+        input {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            padding: 0.75rem 1rem;
+            background: transparent;
+            border: var(--sketch-border-1);
+            border-radius: var(--sketch-radius-2);
+            color: var(--sketch-color);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input:focus {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: inset 2px 2px 0px rgba(0,0,0,0.1);
+        }
+
+        ::placeholder {
+            color: #999;
+            opacity: 1;
+        }
+
+        button {
+            width: 100%;
+            font-family: 'Walter Turncoat', cursive;
+            font-size: 1.8rem;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            background: transparent;
+            color: var(--sketch-color);
+            border: var(--sketch-border-1);
+            border-radius: var(--sketch-radius-1);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: var(--sketch-color);
+            color: #fff;
+            border-radius: var(--sketch-radius-2);
+        }
+
+        button.secondary {
+            background: none;
+            border: none;
+            box-shadow: none;
+            text-decoration: underline;
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+            padding: 0.25rem;
+        }
+
+        button.secondary:hover {
+            color: #666;
+            background: transparent;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .math-container {
+            font-size: 1.4rem;
+            margin: 1.5rem 0;
+            padding: 1.5rem 1rem;
+            border: var(--sketch-border-2);
+            border-radius: var(--sketch-radius-1);
+            background: rgba(255, 255, 255, 0.8);
+            overflow-x: auto;
+            text-align: center;
+        }
+
+        .error-message {
+            color: #d83b3b;
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            text-align: center;
+            min-height: 2.2rem;
+            margin-top: 1rem;
+            transition: opacity 0.3s;
+            opacity: 0;
+            font-weight: bold;
+        }
+
+        .error-message.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN PANEL -->
+    <div id="login-panel" class="container">
+        <h1>Welcome</h1>
+        <p class="subtitle">Just a few quick details...</p>
+        
+        <form id="login-form">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" required placeholder="Jane Doe">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required placeholder="jane@example.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="birthdate">Birthdate</label>
+                <input type="date" id="birthdate" required>
+            </div>
+            
+            <button type="submit">Next</button>
+        </form>
+    </div>
+
+    <!-- CAPTCHA PANEL -->
+    <div id="captcha-panel" class="container hidden">
+        <h2>Human Check</h2>
+        <p class="subtitle">Please verify you're not a bot by solving this simple integration problem.</p>
+        
+        <div class="math-container" id="math-display">
+            <!-- Equation renders here -->
+        </div>
+        
+        <form id="captcha-form">
+            <div class="form-group">
+                <label for="answer">Your Answer</label>
+                <input type="text" id="answer" required placeholder="Type your answer here">
+            </div>
+            
+            <div id="error-msg" class="error-message"></div>
+            
+            <button type="submit">Verify & Log In</button>
+            <button type="button" id="back-btn" class="secondary">Oops, let me go back</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const loginForm = document.getElementById("login-form");
+            const captchaForm = document.getElementById("captcha-form");
+            const loginPanel = document.getElementById("login-panel");
+            const captchaPanel = document.getElementById("captcha-panel");
+            const errorMsg = document.getElementById("error-msg");
+            const backBtn = document.getElementById("back-btn");
+
+            // Define the complex math equation
+            // It relies on odd symmetry so the integral perfectly evaluates to 0
+            const equation = "\\int_{-\\pi}^{\\pi} \\frac{\\sin^{2025}(x) e^{\\cos^2(x)} + x^{1337} \\ln(1+x^2)}{\\sqrt{1+\\cos^2(x)} + \\sum_{k=1}^{10} \\frac{x^{2k}}{k!}} \\, dx";
+            
+            // Render KaTeX equation
+            const renderMath = () => {
+                const display = document.getElementById("math-display");
+                try {
+                    katex.render(equation, display, {
+                        throwOnError: false,
+                        displayMode: true
+                    });
+                } catch (e) {
+                    display.innerText = "Error loading math: " + e.message;
+                }
+            };
+            
+            // Render slightly after load to ensure KaTeX is ready
+            setTimeout(renderMath, 100);
+
+            // Handle Login form
+            loginForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                // If valid, transition to captcha
+                loginPanel.classList.add("hidden");
+                captchaPanel.classList.remove("hidden");
+                errorMsg.classList.remove("show");
+                document.getElementById("answer").value = "";
+                
+                // Need to call render on resize just in case size was skewed when hidden
+                setTimeout(renderMath, 50);
+            });
+
+            // Handle Captcha form
+            captchaForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const answer = document.getElementById("answer").value.trim();
+                
+                // Answer should be exactly 0
+                if (answer === "0") {
+                    alert("Verification successful! You must be a very smart human.");
+                    // Reset or transition to logged in state
+                    captchaPanel.classList.add("hidden");
+                    loginPanel.classList.remove("hidden");
+                    loginForm.reset();
+                } else {
+                    errorMsg.innerText = "Incorrect. Did you miss the odd symmetry? Try again.";
+                    errorMsg.classList.add("show");
+                }
+            });
+
+            // Handle Back button
+            backBtn.addEventListener("click", () => {
+                captchaPanel.classList.add("hidden");
+                loginPanel.classList.remove("hidden");
+            });
+        });
+    </script>
+</body>
+</html>
